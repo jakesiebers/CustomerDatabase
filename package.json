@@ -1,0 +1,19 @@
+{
+  "name": "customerdatabase",
+  "version": "1.0.0",
+  "description": "A simple REST api to handle customers",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakesiebers/CustomerDatabase.git"
+  },
+  "author": "jakesiebers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jakesiebers/CustomerDatabase/issues"
+  },
+  "homepage": "https://github.com/jakesiebers/CustomerDatabase#readme"
+}
