@@ -59,10 +59,16 @@ class Parser extends Transform {
       (items = prepare(line, ' ')).length === 5
     ){
 
-      this.push(items)
+      this.push(items);
+
+    }else{
+
+      this.push(line);
 
     }
 
   }
 
 }
+
+module.exports = Parser;
