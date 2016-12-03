@@ -5,17 +5,22 @@ const Transform = require('stream').Transform;
 
 // Parses lines
 
-class Parser extends Transform {
+class CSVStreamParser extends Transform {
 
-  constructor(options) {
+  constructor(delineators, columns) {
 
     super({
-
       objectMode : true
-
     });
 
     this.unendedLine = '';
+
+    if(typeof delineators === 'string')
+      this.delineators = [delineators];
+    else
+      this.delineators = delineators;
+
+    this.columns = columns;
 
   }
 
@@ -52,23 +57,16 @@ class Parser extends Transform {
                                         .filter((item) => item);
 
     // Find the correct delineator and push the results
-    var items;
-    if(
-      (items = prepare(line, '|')).length === 5 ||
-      (items = prepare(line, ',')).length === 5 ||
-      (items = prepare(line, ' ')).length === 5
-    ){
+    var res = this.delineators.map((delineator) => prepare(line, delineator))
+                              .filter((items) => items.length === this.columns);
 
-      this.push(items);
-
-    }else{
-
+    if(res.length)
+      this.push(res.pop());
+    else
       this.push(line);
-
-    }
 
   }
 
 }
 
-module.exports = Parser;
+module.exports = CSVStreamParser;

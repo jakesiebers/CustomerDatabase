@@ -4,7 +4,7 @@
 const express = require('express');
 
 // Internal Modules
-const Parser = require('./parser');
+const CSVStreamParser = require('./CSVStreamParser');
 
 // Express Initialization
 var app = express();
@@ -18,7 +18,7 @@ app.post('/records', function (req, res) {
 
   req.setEncoding('utf8');
 
-  var items = req.pipe(new Parser());
+  var items = req.pipe(new CSVStreamParser([ '|', ',', ' ' ], 5));
 
   items.on('data', (data) => {
 
