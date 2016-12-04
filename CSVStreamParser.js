@@ -56,13 +56,15 @@ class CSVStreamParser extends Transform {
                                         .map((item) => item.trim())
                                         .filter((item) => item);
 
-    // Find the correct delineator and push the results
+    // Find the working delineators
     var res = this.delineators.map((delineator) => prepare(line, delineator))
                               .filter((items) => items.length === this.columns);
 
+    // Push our result
     if(res.length){
 
-      this.push(res.pop());
+      var res = res.shift();
+      this.push(new Customer(res[0], res[1], res[2], res[3], res[4]));
 
     }else{
 
