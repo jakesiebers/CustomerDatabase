@@ -70,8 +70,7 @@ var handleCSVStream = (stream) => {
 // Express Initialization
 var app = express();
 
-// REST Endpoints
-
+// Input REST Endpoint
 app.post('/records', function (req, res) {
 
   // Handle the incomming POST data stream and return the response on success
@@ -93,6 +92,18 @@ app.post('/records', function (req, res) {
     ));
 
   });
+
+});
+
+// Search REST Endpoint
+app.get('/records/:field/:desc?', function (req, res) {
+
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/json");
+  res.end(JSON.stringify({
+    items : customers.getSortedBy(req.params.field, req.params.desc),
+    success : true
+  }));
 
 });
 
