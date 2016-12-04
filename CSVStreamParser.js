@@ -60,10 +60,17 @@ class CSVStreamParser extends Transform {
     var res = this.delineators.map((delineator) => prepare(line, delineator))
                               .filter((items) => items.length === this.columns);
 
-    if(res.length)
+    if(res.length){
+
       this.push(res.pop());
-    else
-      this.push(line);
+
+    }else{
+
+      var error = new Error('Badly formatted line.');
+      error.line = line;
+      this.push(error);
+
+    }
 
   }
 

@@ -13,7 +13,7 @@ var app = express();
 
 app.post('/records', function (req, res) {
 
-  var failures = 0;
+  var errors = [];
   var successes = 0;
 
   req.setEncoding('utf8');
@@ -22,15 +22,10 @@ app.post('/records', function (req, res) {
 
   items.on('data', (data) => {
 
-    if(typeof data === 'string'){
-
-      failures++;
-
-    }else{
-
+    if(data.constructor === Error)
+      errors.push(data);
+    else
       successes++;
-
-    }
 
   });
 
@@ -38,15 +33,23 @@ app.post('/records', function (req, res) {
 
     var response = {};
 
-    if(failures){
-      response.failures = failures;
-    } else {
+    if(errors.length)
+      response.errors = errors;
+    else
       response.success = true;
-    }
     if(successes) response.successes = successes;
 
     res.setHeader("Content-Type", "text/json");
-    res.send(JSON.stringify(response));
+
+    res.send(JSON.stringify(
+      response,
+      function(key, value){
+        if(value.constructor === Error){
+          value.error = value.message;
+        }
+        return value;
+      }
+    ));
 
   });
 
