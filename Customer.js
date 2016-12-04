@@ -5,10 +5,10 @@ function Customer(lastName, firstName, gender, favoriteColor, birthDate){
   this.firstName = firstName;
   this.gender = gender;
   this.favoriteColor = favoriteColor;
+  this.birthDate = new Date(birthDate);
 
-  try{
-    this.birthDate = new Date(birthDate);
-  }catch(e){
+  // If the date is invalid then return an error
+  if(isNaN(this.birthDate.getTime())){
     var error = new Error('Invalid birthdate format.');
     error.given = birthDate;
     return error;
@@ -18,7 +18,7 @@ function Customer(lastName, firstName, gender, favoriteColor, birthDate){
 
 Customer.prototype = {
 
-  
+
 
 }
 
