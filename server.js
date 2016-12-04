@@ -5,6 +5,13 @@ const express = require('express');
 
 // Internal Modules
 const CSVStreamParser = require('./CSVStreamParser');
+const Customer = require('./Customer');
+const Database = require('./Database');
+
+
+// Set up customer database
+var customers = new Database();
+
 
 // Express Initialization
 var app = express();
@@ -14,7 +21,7 @@ var app = express();
 app.post('/records', function (req, res) {
 
   var errors = [];
-  var successes = 0;
+  var items = [];
 
   req.setEncoding('utf8');
 
@@ -23,9 +30,15 @@ app.post('/records', function (req, res) {
   items.on('data', (data) => {
 
     if(data.constructor === Error)
+
       errors.push(data);
-    else
-      successes++;
+
+    else{
+
+      customers.add(data);
+      items.push(data);
+
+    }
 
   });
 
@@ -37,16 +50,15 @@ app.post('/records', function (req, res) {
       response.errors = errors;
     else
       response.success = true;
-    if(successes) response.successes = successes;
+    
+    if(items.length) response.items = items;
 
     res.setHeader("Content-Type", "text/json");
 
     res.send(JSON.stringify(
       response,
       function(key, value){
-        if(value.constructor === Error){
-          value.error = value.message;
-        }
+        if(value.constructor === Error) value.error = value.message;
         return value;
       }
     ));
