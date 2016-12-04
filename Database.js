@@ -4,7 +4,7 @@
 
 function Database(){
 
-  var objects = [];
+  this.objects = [];
 
 }
 
@@ -12,7 +12,7 @@ Database.prototype = {
 
   add(item){
 
-    objects.push(item);
+    this.objects.push(item);
 
   },
 
