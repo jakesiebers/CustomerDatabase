@@ -63,8 +63,7 @@ class CSVStreamParser extends Transform {
     // Push our result
     if(res.length){
 
-      var res = res.shift();
-      this.push(new Customer(res[0], res[1], res[2], res[3], res[4]));
+      this.push(res.shift());
 
     }else{
 

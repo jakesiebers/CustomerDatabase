@@ -13,27 +13,29 @@ const Database = require('./Database');
 var customers = new Database();
 
 
-// Express Initialization
-var app = express();
+// Handle a csv stream and return a response
+var handleCSVStream = (stream) => {
 
-// REST Endpoints
-
-app.post('/records', function (req, res) {
-
+  // Initialize your collections of errors/successes
   var errors = [];
   var items = [];
 
-  req.setEncoding('utf8');
+  // Set our stream encoding
+  stream.setEncoding('utf8');
 
-  var items = req.pipe(new CSVStreamParser([ '|', ',', ' ' ], 5));
+  // Pipe te stream through the CSV Parser
+  stream = stream.pipe(new CSVStreamParser([ '|', ',', ' ' ], 5));
 
-  items.on('data', (data) => {
+  // For each line that comes back, convert it to a customer object and log it as an error/success
+  stream.on('data', (data) => {
 
-    if(data.constructor === Error)
+    if(data.constructor !== Error) data = new Customer(data[0], data[1], data[2], data[3], data[4]);
+
+    if(data.constructor === Error){
 
       errors.push(data);
 
-    else{
+    }else{
 
       customers.add(data);
       items.push(data);
@@ -42,7 +44,10 @@ app.post('/records', function (req, res) {
 
   });
 
-  items.on('end', () => {
+  // When the stream is complete resolve the promise with the response
+  var p = Promise.defer();
+
+  stream.on('end', () => {
 
     var response = {};
 
@@ -50,15 +55,39 @@ app.post('/records', function (req, res) {
       response.errors = errors;
     else
       response.success = true;
-    
+
     if(items.length) response.items = items;
+
+    p.resolve(response);
+
+  });
+
+  return p.promise;
+
+};
+
+
+// Express Initialization
+var app = express();
+
+// REST Endpoints
+
+app.post('/records', function (req, res) {
+
+  // Handle the incomming POST data stream and return the response on success
+  handleCSVStream(req).then((response) => {
+
+    if(response.success)
+      res.statusCode = 200;
+    else
+      res.statusCode = 400;
 
     res.setHeader("Content-Type", "text/json");
 
-    res.send(JSON.stringify(
+    res.end(JSON.stringify(
       response,
-      function(key, value){
-        if(value.constructor === Error) value.error = value.message;
+      (key, value) => {
+        if(value && value.constructor === Error) value.error = value.message;
         return value;
       }
     ));
