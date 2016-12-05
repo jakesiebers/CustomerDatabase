@@ -4,7 +4,7 @@
 
 function Database(){
 
-  this.objects = [];
+  this.initialize();
 
 }
 
@@ -34,6 +34,12 @@ Database.prototype = {
       return res;
 
     });
+
+  },
+
+  initialize(){
+
+    this.objects = [];
 
   }
 
