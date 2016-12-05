@@ -1,14 +1,13 @@
 
-function Customer(lastName, firstName, gender, favoriteColor, birthDate){
+function Customer(name, gender, favoriteColor, birthDate){
 
-  this.lastName = lastName;
-  this.firstName = firstName;
+  this.name = firstName + lastName;
   this.gender = gender;
-  this.favoriteColor = favoriteColor;
-  this.birthDate = new Date(birthDate);
+  this.favoritecolor = favoriteColor;
+  this.birthdate = new Date(birthDate);
 
   // If the date is invalid then return an error
-  if(isNaN(this.birthDate.getTime())){
+  if(isNaN(this.birthdate.getTime())){
     var error = new Error('Invalid birthdate format.');
     error.given = birthDate;
     return error;

@@ -29,7 +29,7 @@ var handleCSVStream = (stream) => {
   // For each line that comes back, convert it to a customer object and log it as an error/success
   stream.on('data', (data) => {
 
-    if(data.constructor !== Error) data = new Customer(data[0], data[1], data[2], data[3], data[4]);
+    if(data.constructor !== Error) data = new Customer(data[1] + ' ' + data[0], data[2], data[3], data[4]);
 
     if(data.constructor === Error){
 
