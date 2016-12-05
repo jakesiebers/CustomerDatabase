@@ -16,6 +16,12 @@ Database.prototype = {
 
   },
 
+  getAll(){
+
+    return this.objects;
+
+  },
+
   getSortedBy(field, desc){
 
     return this.objects.sort((a, b) => {
