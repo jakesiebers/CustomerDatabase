@@ -22,10 +22,16 @@ Database.prototype = {
 
       if(a[field] === b[field]) return 0;
 
+      var res;
+
       if(a[field] > b[field])
-        return -1;
+        res = 1;
       else
-        return 1;
+        res = -1;
+
+      if(desc) res *= -1;
+
+      return res;
 
     });
 
