@@ -6,7 +6,7 @@ function Customer(name, gender, favoriteColor, birthDate){
   if(typeof favoriteColor !== 'string') return new Error('A favorite color is required to create a customer.');
   if(typeof birthDate !== 'string') return new Error('A birth date is required to create a customer.');
 
-  this.name = firstName + lastName;
+  this.name = name;
   this.gender = gender;
   this.favoritecolor = favoriteColor;
   this.birthdate = new Date(birthDate);
